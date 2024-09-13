@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 
 @Component
-public class Seeds  implements CommandLineRunner {
-    private PasswordEncoder encoder;
-
+public class Seeds implements CommandLineRunner {
     @Autowired
     UserRepository userRepository;
+    private PasswordEncoder encoder;
 
     public Seeds(PasswordEncoder encoder) {
         this.encoder = encoder;
     }
+
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {

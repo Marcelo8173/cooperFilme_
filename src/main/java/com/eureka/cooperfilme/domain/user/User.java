@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,11 +22,14 @@ public class User implements UserDetails {
 
     @NotBlank
     private String name;
+
     @Email
     @Column(unique = true)
     private String email;
+
     @NotBlank
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRoles role;
 
