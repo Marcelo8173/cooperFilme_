@@ -1,5 +1,8 @@
 package com.eureka.cooperfilme.dataBase.seeds;
 
+import com.eureka.cooperfilme.domain.customer.Customer;
+import com.eureka.cooperfilme.domain.scripts.Scripts;
+import com.eureka.cooperfilme.domain.scripts.enuns.ScriptsStatus;
 import com.eureka.cooperfilme.domain.user.User;
 import com.eureka.cooperfilme.domain.user.enuns.UserRoles;
 import com.eureka.cooperfilme.repositories.userRepository.UserRepository;
@@ -36,7 +39,6 @@ public class Seeds implements CommandLineRunner {
             u5.setPassword(encoder.encode(u5.getPassword()));
 
             userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5));
-
         }
     }
 }

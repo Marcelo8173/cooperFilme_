@@ -17,7 +17,6 @@ public class Scripts {
     @Column(nullable = false)
     private String title;
 
-//depois alterar
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 

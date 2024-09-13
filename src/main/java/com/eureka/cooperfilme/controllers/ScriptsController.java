@@ -3,6 +3,7 @@ package com.eureka.cooperfilme.controllers;
 import com.eureka.cooperfilme.domain.scripts.Scripts;
 import com.eureka.cooperfilme.services.useCases.CreateScriptService;
 import com.eureka.cooperfilme.services.useCases.ListScriptsBySearchService;
+import com.eureka.cooperfilme.services.useCases.ScriptCheckDetails;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,9 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.net.URLDecoder;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/scripts")
@@ -23,6 +27,9 @@ public class ScriptsController {
 
     @Autowired
     ListScriptsBySearchService listScriptsBySearchService;
+
+    @Autowired
+    ScriptCheckDetails scriptCheckDetails;
 
     @PostMapping
     public ResponseEntity<CreateSriptDTO> createScript(@RequestBody @Valid CreateSriptDTO createSriptDTO) {
@@ -37,13 +44,25 @@ public class ScriptsController {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<List<Scripts>> listScripts(@RequestParam(value = "search", defaultValue = "") String search) {
+    public ResponseEntity<List<String>> listScripts(@RequestParam(value = "search", defaultValue = "") String search) {
         search =  URLDecoder.decode(search);
         if (search.trim().isEmpty()) {
             return ResponseEntity.ok().body(Collections.emptyList());
         }
         List<Scripts> scripts = listScriptsBySearchService.listScripts(search, search);
-        return ResponseEntity.ok().body(scripts);
+
+        List<String> scriptStauts = scripts.stream()
+                .map(script -> script.getStatus().name())
+                .toList();
+        return ResponseEntity.ok().body(scriptStauts);
+    }
+
+    @GetMapping("/check/details/{id}")
+    public ResponseEntity<Scripts> checkDetailsOnScript(@PathVariable UUID id) {
+         var response = scriptCheckDetails.listDetailsOnScript(id)
+                .map(script -> ResponseEntity.ok(script))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+        return response;
     }
 
 }

@@ -5,14 +5,15 @@ import com.eureka.cooperfilme.repositories.userRepository.ScriptRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
-public class ListScriptsBySearchService {
+public class ScriptCheckDetails {
     @Autowired
     ScriptRepository scriptRepository;
 
-    public List<Scripts> listScripts(String title, String email) {
-        return scriptRepository.findByTitleContainingOrCustomerEmailContaining(title, email);
+    public Optional<Scripts> listDetailsOnScript (UUID uuid) {
+        return scriptRepository.findById(uuid);
     }
 }
