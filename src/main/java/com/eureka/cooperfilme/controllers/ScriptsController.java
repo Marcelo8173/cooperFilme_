@@ -4,6 +4,7 @@ import com.eureka.cooperfilme.domain.scripts.Scripts;
 import com.eureka.cooperfilme.services.useCases.CreateScriptService;
 import com.eureka.cooperfilme.services.useCases.ListScriptsBySearchService;
 import com.eureka.cooperfilme.services.useCases.ScriptCheckDetails;
+import com.eureka.cooperfilme.services.useCases.ScriptsListAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,9 @@ public class ScriptsController {
 
     @Autowired
     ScriptCheckDetails scriptCheckDetails;
+
+    @Autowired
+    ScriptsListAll scriptsListAll;
 
     @PostMapping
     public ResponseEntity<CreateSriptDTO> createScript(@RequestBody @Valid CreateSriptDTO createSriptDTO) {
@@ -63,6 +67,11 @@ public class ScriptsController {
                 .map(script -> ResponseEntity.ok(script))
                 .orElseGet(() -> ResponseEntity.notFound().build());
         return response;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Scripts>> listAll () {
+        return ResponseEntity.ok().body(scriptsListAll.listAllScripts());
     }
 
 }
