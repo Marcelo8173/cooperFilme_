@@ -3,7 +3,9 @@ package com.eureka.cooperfilme.domain.scripts;
 import com.eureka.cooperfilme.domain.customer.Customer;
 import jakarta.persistence.*;
 import com.eureka.cooperfilme.domain.scripts.enuns.ScriptsStatus;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +29,10 @@ public class Scripts {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ScriptsStatus status;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     public Scripts() {
     }

@@ -1,18 +1,21 @@
 package com.eureka.cooperfilme.controllers;
 
 import com.eureka.cooperfilme.domain.scripts.Scripts;
+import com.eureka.cooperfilme.domain.scripts.enuns.ScriptsStatus;
 import com.eureka.cooperfilme.services.useCases.CreateScriptService;
 import com.eureka.cooperfilme.services.useCases.ListScriptsBySearchService;
 import com.eureka.cooperfilme.services.useCases.ScriptCheckDetails;
 import com.eureka.cooperfilme.services.useCases.ScriptsListAll;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.eureka.cooperfilme.domain.scripts.scriptsDTO.CreateSriptDTO;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.net.URLDecoder;
@@ -49,7 +52,7 @@ public class ScriptsController {
 
     @GetMapping("/check")
     public ResponseEntity<List<String>> listScripts(@RequestParam(value = "search", defaultValue = "") String search) {
-        search =  URLDecoder.decode(search);
+        search = URLDecoder.decode(search);
         if (search.trim().isEmpty()) {
             return ResponseEntity.ok().body(Collections.emptyList());
         }
@@ -63,15 +66,18 @@ public class ScriptsController {
 
     @GetMapping("/check/details/{id}")
     public ResponseEntity<Scripts> checkDetailsOnScript(@PathVariable UUID id) {
-         var response = scriptCheckDetails.listDetailsOnScript(id)
+        var response = scriptCheckDetails.listDetailsOnScript(id)
                 .map(script -> ResponseEntity.ok(script))
                 .orElseGet(() -> ResponseEntity.notFound().build());
         return response;
     }
 
     @GetMapping
-    public ResponseEntity<List<Scripts>> listAll () {
-        return ResponseEntity.ok().body(scriptsListAll.listAllScripts());
+    public ResponseEntity<List<Scripts>> listAll(@RequestParam(value = "status", required = false) ScriptsStatus status,
+                                                 @RequestParam(value = "sendDate", required = false)
+                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate sendDate,
+                                                 @RequestParam(value = "email", required = false) String email) {
+        return ResponseEntity.ok().body(scriptsListAll.listAllScripts(status, sendDate, email));
     }
 
 }
