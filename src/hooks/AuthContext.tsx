@@ -2,10 +2,9 @@ import React, { createContext, useCallback, useState, useContext } from "react";
 import api from "../services/api";
 
 interface User {
-  id: string;
-  name: string;
   email: string;
-  avatar_url: string;
+  avatar_url?: string;
+  role: string;
 }
 
 interface AuthState {
@@ -15,7 +14,8 @@ interface AuthState {
 
 interface singInCredentias {
   email: string;
-  password: string;
+  role: string;
+  token: string;
 }
 
 interface AuthContextData {
@@ -47,26 +47,30 @@ export const Authprovider = ({ children }: AuthproviderProps) => {
 
   interface DataToLoginProps {
     email: string;
-    password: string;
     role: string;
+    token: string;
   }
 
-  const singIn = useCallback(async ({ email, password, role }: DataToLoginProps) => {
-    const response = await api.post("sessions", {
-      email,
-      password,
-      role
-    });
+  const singIn = useCallback(
+    async ({ email, role, token }: DataToLoginProps) => {
+      const user = {
+        email,
+        role,
+      };
 
-    const { token, user } = response.data;
+      if (!token) {
+        return;
+      }
 
-    localStorage.setItem("@cooperFilmes: token", token);
-    localStorage.setItem("@cooperFilmes: user", JSON.stringify(user));
+      localStorage.setItem("@cooperFilmes: token", token);
+      localStorage.setItem("@cooperFilmes: user", JSON.stringify(user));
 
-    api.defaults.headers.authorization = `Bearer ${token}`;
+      api.defaults.headers.authorization = `Bearer ${token}`;
 
-    setData({ token, user });
-  }, []);
+      setData({ token, user });
+    },
+    []
+  );
 
   const singOut = useCallback(() => {
     localStorage.removeItem("@cooperFilmes: token");

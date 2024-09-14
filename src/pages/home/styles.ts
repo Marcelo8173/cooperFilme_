@@ -1,22 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div``;
-export const Header = styled.header`
-  background: #8257e5;
-  width: 100%;
-  min-height: 272px;
-  padding: 20px 50px;
-`;
 
-export const Title = styled.h1`
-  color: #ffffff;
-  font-size: 36px;
-  font-weight: 700;
-  margin-top: 40px;
-  margin-left: 300px;
-  max-width: 300px;
-  text-align: left;
-`;
 
 export const SearchContainer = styled.div`
   width: 100%;
@@ -59,5 +44,24 @@ export const NewScript = styled.div`
     &:hover {
       opacity: 0.8;
     }
+  }
+`;
+
+export const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 100px;
+
+  > p {
+    font-family: Poppins;
+    font-size: 14px;
+    color: #32264d;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 `;

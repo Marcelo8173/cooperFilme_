@@ -4,13 +4,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   labelColor?: "default" | "dark";
   error?: string;
+  itemRef?:any
 }
 
-const Input = ({ label, error, labelColor, ...props }: InputProps) => {
+const Input = ({ label, error, labelColor, itemRef ,...props }: InputProps) => {
   return (
     <Container error={!!error} labelColor={labelColor}>
       <label>{label}</label>
-      <input {...props} type="text" />
+      <input ref={itemRef} {...props} type="text" />
       {!!error && <HelpText>{error}</HelpText>}
     </Container>
   );

@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { Button } from "../../components/Buttons/Buttons";
 import { Input } from "../../components/Input/Input";
-import { Header } from "../home/styles";
-import {
-  Container,
-  LoginContainer,
-  Main,
-  Title,
-  ButtonContainer,
-} from "./style";
+import { Container, LoginContainer, Main, ButtonContainer } from "./style";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { Select } from "../../components/Select/Select";
+import { Header } from "../../components/Header/Header";
+import { useAuth } from "../../hooks/AuthContext";
 
 interface DataProps {
   email: string;
@@ -27,6 +22,7 @@ interface ErrorProps {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { singIn } = useAuth();
 
   const [data, setData] = useState<DataProps>({
     email: "",
@@ -57,8 +53,15 @@ const Login = () => {
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
       } else {
-        console.log('data', data)
-        await api.post("/auth/login", data);
+        await api.post("/auth/login", data).then((response) => {
+          singIn({
+            email: data.email,
+            role: data.role,
+            token: response.data.token,
+          });
+          navigate(`/${response.data.token}`)
+
+        });
       }
     } catch (e) {
       console.log(e);
@@ -67,9 +70,7 @@ const Login = () => {
 
   return (
     <Container>
-      <Header>
-        <Title>Login</Title>
-      </Header>
+      <Header title="Login" />
       <Main>
         <LoginContainer>
           <Input
