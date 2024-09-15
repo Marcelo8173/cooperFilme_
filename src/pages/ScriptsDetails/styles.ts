@@ -95,3 +95,5 @@ export const SaveComments = styled.div`
     margin-right: 8px;
   }
 `;
+
+export const Votation = styled.div``;

@@ -11,11 +11,14 @@ import {
   CommentsContainer,
   Comments,
   SaveComments,
+  Votation
 } from "./styles";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { Input } from "../../components/Input/Input";
 import { Button } from "../../components/Buttons/Buttons";
+import { useAuth } from "../../hooks/AuthContext";
+import { Select } from "../../components/Select/Select";
 
 interface Client {
   id: string;
@@ -46,6 +49,7 @@ const ScriptsDetails = () => {
   const [data, setData] = useState<Script>({} as Script);
   const [comments, setComments] = useState<{ comment: string }[]>([]);
   const [newComment, setNewComment] = useState<{ comment: string }>();
+  const { user } = useAuth();
 
   useEffect(() => {
     api
@@ -79,6 +83,30 @@ const ScriptsDetails = () => {
     }
   };
 
+  const renderOptionsStauts = () => {
+    const status: any = {
+      ANALISTA: [
+        {
+          value: "RECUSADO",
+          label: "RECUSADO",
+        },
+        {
+          value: "AGUARDANDO_REVISAO",
+          label: "AGUARDANDO_REVISAO",
+        },
+      ],
+      REVISOR: [
+        {
+          value: "AGUARDANDO_REVISAO",
+          label: "AGUARDANDO_REVISAO",
+        },
+      ],
+      APROVADORES: [],
+    };
+
+    return status[user?.role] || [];
+  };
+
   return (
     <Container>
       <Header title="Detalhes do roteiro" />
@@ -101,15 +129,28 @@ const ScriptsDetails = () => {
           {comments.length > 0 &&
             comments.map((item) => <Comments>{item.comment}</Comments>)}
         </CommentsContainer>
-        <SaveComments>
-          <Input
-            name="comment"
-            onChange={handleChange}
-            label="Novo comentário"
-            placeholder="Crie seu comentário:"
+        {user.role === "REVISOR" && data.status === "EM_REVISAO" && (
+          <SaveComments>
+            <Input
+              name="comment"
+              onChange={handleChange}
+              label="Novo comentário"
+              placeholder="Crie seu comentário:"
+            />
+            <Button onClick={handleSubmit}>Salvar</Button>
+          </SaveComments>
+        )}
+        {user.role !== "APROVADORES" && data.status !== "AGUARDANDO_APROVACAO" ? (
+          <Select
+            label="Alterar status"
+            name="nextStatus"
+            options={renderOptionsStauts()}
           />
-          <Button onClick={handleSubmit}>Salvar</Button>
-        </SaveComments>
+        ): (
+          <Votation>
+            <Button>0/1 Votar para aprovação</Button>
+          </Votation>
+        )}
       </Main>
     </Container>
   );
