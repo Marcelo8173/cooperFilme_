@@ -24,6 +24,7 @@ export const Container = styled.div<ContainerProps>`
     background: #fafafc;
     height: 56px;
     padding: 5px;
+    
   }
 `;
 

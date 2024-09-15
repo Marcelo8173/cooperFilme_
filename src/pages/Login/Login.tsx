@@ -59,8 +59,7 @@ const Login = () => {
             role: data.role,
             token: response.data.token,
           });
-          navigate(`/${response.data.token}`)
-
+          navigate(`/dashboard`);
         });
       }
     } catch (e) {

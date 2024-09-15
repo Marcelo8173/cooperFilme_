@@ -18,7 +18,9 @@ export const SelectItens = styled.select`
 `;
 
 export const Container = styled.div`
-display: flex;
+  display: flex;
   flex-direction: column;
   width: 500px;
+  font-family: Poppins;
+  font-size: 16px;
 `;
