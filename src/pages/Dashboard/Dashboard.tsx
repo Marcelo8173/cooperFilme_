@@ -51,21 +51,7 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
-    // api.get("/scripts").then((response) => setData(response.data));
-    setData([
-      {
-        id: "691a91b8-50b1-43a3-be68-5f700b0ddb9a",
-        title: "film",
-        content: "o silencio dos inocentes",
-        status: "EM_ANALISE",
-        client: {
-          id: "8f914d5f-b76e-4d8a-a7c9-e87854b2c14a",
-          name: "Marcelo",
-          email: "marceloandreb1io@gmail.com",
-          phone: "11993882395",
-        },
-      },
-    ]);
+    api.get("/scripts").then((response) => setData(response.data));
   }, []);
 
   return (

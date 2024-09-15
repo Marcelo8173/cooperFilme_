@@ -10,6 +10,7 @@ export const Container = styled.div`
     opacity: 0.8;
     cursor: pointer;
   }
+  margin-bottom: 20px;
 `;
 
 export const Title = styled.div`

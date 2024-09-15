@@ -17,11 +17,12 @@ const AppRoutes: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/newScript" element={<NewScript />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/scripts/details/:id" element={<ScriptsDetails />} />
-          {/* <Route path="/dashboard" element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<PrivateRoute />}>
             <Route path="" element={<Dashboard />} />
-          </Route> */}
+          </Route>
+          <Route path="/scripts/details/:id" element={<PrivateRoute />}>
+            <Route path="" element={<ScriptsDetails />} />
+          </Route>
         </Routes>
       </Router>
     </Authprovider>
@@ -29,3 +30,5 @@ const AppRoutes: React.FC = () => {
 };
 
 export { AppRoutes };
+
+

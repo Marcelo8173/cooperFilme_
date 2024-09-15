@@ -38,21 +38,10 @@ interface Script {
 
 const ScriptsDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const [data, setDate] = useState<Script>({
-    id: "2d58a18a-a4f8-4078-b161-aef4b44f2a13",
-    title: "film",
-    content: "o silencio dos inocentes",
-    status: "EM_ANALISE",
-    client: {
-      id: "260a9383-dc2b-4d46-a5e8-0aae8fcaaaa6",
-      name: "Marcelo",
-      email: "marceloandreb1io@gmail.com",
-      phone: "11993882395",
-    },
-  });
+  const [data, setData] = useState<Script>({} as Script);
 
   useEffect(() => {
-    // api.get(`/scripts/check/details/${id}`).then(response => setData(response.data))
+    api.get(`/scripts/check/details/${id}`).then(response => setData(response.data))
   }, [id]);
 
   return (
@@ -66,9 +55,9 @@ const ScriptsDetails = () => {
           </Status>
         </TitleContainer>
         <ClientData>
-          <span>{data.client.name}</span>
-          <span>{data.client.email}</span>
-          <span>{data.client.phone}</span>
+          <span>{data?.client?.name}</span>
+          <span>{data?.client?.email}</span>
+          <span>{data?.client?.phone}</span>
         </ClientData>
         <Content>{data.content}</Content>
 
