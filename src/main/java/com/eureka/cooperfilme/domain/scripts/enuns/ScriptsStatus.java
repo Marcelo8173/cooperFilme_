@@ -28,4 +28,13 @@ public enum ScriptsStatus {
         }
         throw new IllegalArgumentException("Invalid status code: " + statusCode);
     }
+
+    public static ScriptsStatus fromString(String status) {
+        for (ScriptsStatus s : ScriptsStatus.values()) {
+            if (s.name().equalsIgnoreCase(status)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException("Unknown status: " + status);
+    }
 }

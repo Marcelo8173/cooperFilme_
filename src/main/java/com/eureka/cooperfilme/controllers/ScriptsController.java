@@ -2,8 +2,11 @@ package com.eureka.cooperfilme.controllers;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.eureka.cooperfilme.application.status.factory.StatusCheckerFactory;
 import com.eureka.cooperfilme.domain.scripts.Scripts;
+import com.eureka.cooperfilme.domain.scripts.changeStatus.StatusChangeCheck;
 import com.eureka.cooperfilme.domain.scripts.enuns.ScriptsStatus;
+import com.eureka.cooperfilme.domain.scripts.scriptsDTO.ChangeStatusDTO;
 import com.eureka.cooperfilme.domain.user.enuns.UserRoles;
 import com.eureka.cooperfilme.services.useCases.*;
 import jakarta.validation.Valid;
@@ -17,10 +20,7 @@ import com.eureka.cooperfilme.domain.scripts.scriptsDTO.CreateSriptDTO;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.net.URLDecoder;
@@ -93,17 +93,20 @@ public class ScriptsController {
     }
 
     @PostMapping("/change/{id}")
-    public ResponseEntity<Void> changeStatus(@PathVariable UUID id, @RequestBody String nextStatus, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<String> changeStatus(@PathVariable UUID id, @RequestBody ChangeStatusDTO nextStatus, @RequestHeader("Authorization") String authHeader) {
+
         UserRoles userRole = getUserRoleFromToken(authHeader);
         ScriptsStatus currentStatus = getCurrentStatus(id);
-//
-            if (!canChangeStatus(userRole, currentStatus, nextStatus)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-//            scriptUpdateService.updateScriptStatus(id, nextStatus);
-        return ResponseEntity.ok().build();
 
+        StatusCheckerFactory factory = new StatusCheckerFactory();
+        StatusChangeCheck checker = factory.createChecker(userRole);
 
+        if (checker.canChangeStatus(currentStatus, nextStatus.getNextStatus())) {
+            scriptUpdateService.updateScriptStatus(id, nextStatus.getNextStatus());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error");
+        }
     }
 
     public UserRoles getUserRoleFromToken(String authHeader) {
@@ -131,19 +134,4 @@ public class ScriptsController {
         return scriptCheckDetails.getStatusById(id);
     }
 
-    private boolean canChangeStatus(UserRoles role, ScriptsStatus currentStatus, String nextStatus) {
-        switch (role) {
-            case ANALISTA:
-                return (currentStatus.equals("aguardando_analise") && nextStatus.equals("em_analise")) ||
-                        (currentStatus.equals("em_analise") && (nextStatus.equals("aguardando_revisao") || nextStatus.equals("recusado")));
-            case REVISOR:
-                return (currentStatus.equals("aguardando_revisao") && nextStatus.equals("em_revisao")) ||
-                        (currentStatus.equals("em_revisao") && nextStatus.equals("aguardando_aprovacao"));
-            case APROVADORES:
-                return (currentStatus.equals("aguardando_aprovacao") && nextStatus.equals("em_aprovacao")) ||
-                        (currentStatus.equals("em_aprovacao") && (nextStatus.equals("aprovado") || nextStatus.equals("recusado")));
-            default:
-                return false;
-        }
-    }
 }
