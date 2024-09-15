@@ -1,4 +1,6 @@
 package com.eureka.cooperfilme.config.security;
+import com.eureka.cooperfilme.domain.user.enuns.UserRoles;
+import com.eureka.cooperfilme.services.useCases.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,11 +29,10 @@ public class SecurityConfiguration {
     @Autowired
     SecurityFilter securityFilter;
 
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
         };
     }
 

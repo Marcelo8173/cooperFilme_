@@ -26,7 +26,7 @@ public class Scripts {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     @Column(nullable = false)
     private ScriptsStatus status;
 

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface ScriptRepository extends JpaRepository<Scripts, UUID>, JpaSpecificationExecutor<Scripts> {
     List<Scripts> findByTitleContainingOrCustomerEmailContaining(String title, String email);
+    Scripts getStatusById(UUID id);
 }
