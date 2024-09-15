@@ -15,6 +15,7 @@ public class ScriptCheckDetails {
     ScriptRepository scriptRepository;
 
     public Optional<Scripts> listDetailsOnScript(UUID uuid) {
+        System.out.println( scriptRepository.findById(uuid));
         return scriptRepository.findById(uuid);
     }
 
