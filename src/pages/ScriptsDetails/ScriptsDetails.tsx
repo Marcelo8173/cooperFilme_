@@ -8,9 +8,14 @@ import {
   TitleContainer,
   Status,
   ClientData,
+  CommentsContainer,
+  Comments,
+  SaveComments,
 } from "./styles";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { Input } from "../../components/Input/Input";
+import { Button } from "../../components/Buttons/Buttons";
 
 interface Client {
   id: string;
@@ -39,10 +44,40 @@ interface Script {
 const ScriptsDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<Script>({} as Script);
+  const [comments, setComments] = useState<{ comment: string }[]>([]);
+  const [newComment, setNewComment] = useState<{ comment: string }>();
 
   useEffect(() => {
-    api.get(`/scripts/check/details/${id}`).then(response => setData(response.data))
+    api
+      .get(`/scripts/check/details/${id}`)
+      .then((response) => setData(response.data));
+    api
+      .get(`/comments/script/${id}`)
+      .then((response) => setComments(response.data));
   }, [id]);
+
+  const handleChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setNewComment((prevData: any) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await api.post(`/comments/script/${id}`, newComment);
+      if (newComment) {
+        setComments([newComment, ...comments]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Container>
@@ -61,7 +96,20 @@ const ScriptsDetails = () => {
         </ClientData>
         <Content>{data.content}</Content>
 
-        <p>Comentarios</p>
+        <CommentsContainer>
+          <p>Comentários: </p>
+          {comments.length > 0 &&
+            comments.map((item) => <Comments>{item.comment}</Comments>)}
+        </CommentsContainer>
+        <SaveComments>
+          <Input
+            name="comment"
+            onChange={handleChange}
+            label="Novo comentário"
+            placeholder="Crie seu comentário:"
+          />
+          <Button onClick={handleSubmit}>Salvar</Button>
+        </SaveComments>
       </Main>
     </Container>
   );

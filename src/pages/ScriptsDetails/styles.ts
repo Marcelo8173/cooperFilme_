@@ -32,7 +32,6 @@ export const Content = styled.div`
 export const TitleContainer = styled.div`
   display: flex;
   align-items: baseline;
-
 `;
 
 export const Status = styled.span`
@@ -62,4 +61,37 @@ export const ClientData = styled.div`
   line-height: 26px;
   display: flex;
   flex-direction: column;
+`;
+
+export const CommentsContainer = styled.div`
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  > p {
+    color: #32264d;
+    font-family: Archivo;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 25px;
+  }
+`;
+
+export const Comments = styled.span`
+  color: #6a6180;
+  font-family: Archivo;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 25px;
+`;
+
+export const SaveComments = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: end;
+  margin-top: 8px;
+  > div {
+    margin-right: 8px;
+  }
 `;
