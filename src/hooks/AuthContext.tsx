@@ -1,10 +1,12 @@
 import React, { createContext, useCallback, useState, useContext } from "react";
 import api from "../services/api";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   email: string;
   avatar_url?: string;
   role: string;
+  userId?: string;
 }
 
 interface AuthState {
@@ -48,12 +50,24 @@ export const Authprovider = ({ children }: AuthproviderProps) => {
   interface DataToLoginProps {
     email: string;
     role: string;
+    id: string;
     token: string;
   }
 
+  const decodeToken = (token: any) => {
+    try {
+      const decoded = jwtDecode(token) as any;
+      console.log(token, decoded);
+      return decoded.userId;
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      return null;
+    }
+  };
+
   const singIn = useCallback(
     async ({ email, role, token }: DataToLoginProps) => {
-      const user = {
+      let user: any = {
         email,
         role,
       };
@@ -61,6 +75,13 @@ export const Authprovider = ({ children }: AuthproviderProps) => {
       if (!token) {
         return;
       }
+
+      const userId = decodeToken(token);
+      console.log("userId", userId);
+      user = {
+        ...user,
+        userId: userId,
+      };
 
       localStorage.setItem("@cooperFilmes: token", token);
       localStorage.setItem("@cooperFilmes: user", JSON.stringify(user));

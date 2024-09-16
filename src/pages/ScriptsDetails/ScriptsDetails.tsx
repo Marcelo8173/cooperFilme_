@@ -11,7 +11,7 @@ import {
   CommentsContainer,
   Comments,
   SaveComments,
-  Votation
+  Votation,
 } from "./styles";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
@@ -49,15 +49,25 @@ const ScriptsDetails = () => {
   const [data, setData] = useState<Script>({} as Script);
   const [comments, setComments] = useState<{ comment: string }[]>([]);
   const [newComment, setNewComment] = useState<{ comment: string }>();
+  const [votation, setVotation] = useState<{ quantity: number }>({
+    quantity: 0,
+  });
   const { user } = useAuth();
 
   useEffect(() => {
-    api
-      .get(`/scripts/check/details/${id}`)
-      .then((response) => setData(response.data));
-    api
-      .get(`/comments/script/${id}`)
-      .then((response) => setComments(response.data));
+    Promise.all([
+      api.get(`/scripts/check/details/${id}`),
+      api.get(`/comments/script/${id}`),
+      api.get(`/votation/${id}`),
+    ])
+      .then(([scriptDetailsResponse, commentsResponse, votationResponse]) => {
+        setData(scriptDetailsResponse.data);
+        setComments(commentsResponse.data);
+        setVotation(votationResponse.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
   }, [id]);
 
   const handleChange = (
@@ -107,6 +117,18 @@ const ScriptsDetails = () => {
     return status[user?.role] || [];
   };
 
+  const handleVote = async () => {
+    try {
+      await api.post(`/votation/${id}/${user.userId}`);
+      setVotation({
+        quantity: votation.quantity + 1,
+      });
+    } catch (e) {
+      console.log(e);
+      
+    }
+  };
+
   return (
     <Container>
       <Header title="Detalhes do roteiro" />
@@ -140,16 +162,20 @@ const ScriptsDetails = () => {
             <Button onClick={handleSubmit}>Salvar</Button>
           </SaveComments>
         )}
-        {user.role !== "APROVADORES" && data.status !== "AGUARDANDO_APROVACAO" ? (
+        {user.role !== "APROVADORES" ? (
           <Select
             label="Alterar status"
             name="nextStatus"
             options={renderOptionsStauts()}
           />
-        ): (
-          <Votation>
-            <Button>0/1 Votar para aprovação</Button>
-          </Votation>
+        ) : (
+          data.status === "AGUARDANDO_APROVACAO" && (
+            <Votation>
+              <Button onClick={handleVote}>
+                {votation?.quantity}/3 Votar para aprovação
+              </Button>
+            </Votation>
+          )
         )}
       </Main>
     </Container>
