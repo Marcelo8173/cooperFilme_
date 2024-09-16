@@ -12,6 +12,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
+
 import com.auth0.jwt.exceptions.JWTCreationException;
 
 @Service
@@ -21,12 +23,14 @@ public class TokenService {
 
     public String generateToken(User user) {
         try {
+            UUID userId = user.getId();
 
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(user.getEmail())
                     .withClaim("role", user.getRole().name())
+                    .withClaim("userId", userId.toString())
                     .withExpiresAt(generateExpirateDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

@@ -60,7 +60,13 @@ public class Seeds implements CommandLineRunner {
                     , customer
                     , ScriptsStatus.EM_ANALISE);
 
-            scriptRepository.saveAll(Arrays.asList(scripts1, scripts2));
+            Scripts scripts3 = new Scripts(null
+                    , "Imaculada",
+                    "Cecilia, uma jovem religiosa, se torna freira em um convento isolado na região rural italiana. Após uma gravidez misteriosa, Cecilia é atormentada por forças perversas, enquanto confronta segredos sombrios e horrores do convento."
+                    , customer
+                    , ScriptsStatus.AGUARDANDO_APROVACAO);
+
+            scriptRepository.saveAll(Arrays.asList(scripts1, scripts2, scripts3));
 
         }
     }
