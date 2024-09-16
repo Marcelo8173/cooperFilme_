@@ -1,15 +1,8 @@
-# Dockerfile para React App (modo de desenvolvimento)
-FROM node:18-alpine
+# Dockerfile para Spring Boot App
+FROM openjdk:17-jdk-alpine
+VOLUME /tmp
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
 
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-COPY . .
-
-# Exponha a porta 3000
-EXPOSE 3000
-
-# Comando para rodar a aplicação em modo de desenvolvimento
-CMD ["npm", "start"]
+EXPOSE 8080
