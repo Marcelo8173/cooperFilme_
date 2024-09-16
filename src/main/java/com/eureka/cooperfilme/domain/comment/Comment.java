@@ -1,8 +1,5 @@
 package com.eureka.cooperfilme.domain.comment;
 
-import com.eureka.cooperfilme.domain.customer.Customer;
-import com.eureka.cooperfilme.domain.scripts.Scripts;
-import com.eureka.cooperfilme.domain.user.User;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 

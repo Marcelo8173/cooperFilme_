@@ -3,13 +3,10 @@ package com.eureka.cooperfilme.services.useCases;
 import com.eureka.cooperfilme.domain.comment.Comment;
 import com.eureka.cooperfilme.domain.comment.commentDTO.CommentDTO;
 import com.eureka.cooperfilme.domain.scripts.Scripts;
-import com.eureka.cooperfilme.domain.user.User;
 import com.eureka.cooperfilme.repositories.userRepository.CommentRepository;
 import com.eureka.cooperfilme.repositories.userRepository.ScriptRepository;
 import org.hibernate.validator.spi.scripting.ScriptEvaluatorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 

@@ -1,6 +1,5 @@
 package com.eureka.cooperfilme.controllers;
 
-import com.eureka.cooperfilme.domain.votation.Votation;
 import com.eureka.cooperfilme.domain.votation.quantityDTO.VotationQuantityDTO;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;

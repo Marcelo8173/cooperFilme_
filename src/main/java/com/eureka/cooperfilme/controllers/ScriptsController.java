@@ -62,6 +62,7 @@ public class ScriptsController {
                 scrpitSaved.getClient().getPhone()));
     }
 
+    @SuppressWarnings("deprecation")
     @GetMapping("/check")
     public ResponseEntity<List<ScriptTitleAndStatusDTO>> listScripts(@RequestParam(value = "search", defaultValue = "") String search) {
         search = URLDecoder.decode(search);
